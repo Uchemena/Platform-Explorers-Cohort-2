@@ -1,5 +1,4 @@
-# Build a simple greeting & small talk assistant
----
+# Build a simple greeting assistant
 
 ## Scenario:  
 The Communications team at Fabrikam wants an assistant that:
