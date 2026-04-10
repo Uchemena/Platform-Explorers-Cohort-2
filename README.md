@@ -16,7 +16,7 @@ Platform Explorers is an initiative aimed at bridging the gap between theoretica
 | **Power Platform** | Hands-on projects for automating processes and building low-code applications. |
 | **Data Analyst** | Mentees will learn to define problems, prioritize features, create Product Requirement Documents (PRDs), and collaborate with teams to build and improve products. They will work on real-world scenarios, developing both new products and enhancing existing ones. |
 | **AI Workforce** | The AI Workforce use cases will help mentees learn how to design, build, and test Copilot agents using Copilot Chat and Copilot Studio, including creating conversational flows, capturing user input, and grounding agent responses in trusted organizational knowledge. |
-| **Dynamics 365 Customer Engagement** | Mentees will learn to define problems, prioritize features, create Product Requirement Documents (PRDs), and collaborate with teams to build and improve products. They will work on real-world scenarios, developing both new products and enhancing existing ones. |
+| **Dynamics 365 Customer Engagement** | The Dynamics 365 Customer Engagement use cases present different scenarios to MAXi, challenging them to build and implement CRM solutions using Microsoft Dynamics 365 tools such as Sales, Customer Service, and Field Service to address business needs related to customer acquisition, sales processes, and post-sales support. |
 | **Dynamics 365 ERP** | Mentees will learn to define problems, prioritize features, create Product Requirement Documents (PRDs), and collaborate with teams to build and improve products. They will work on real-world scenarios, developing both new products and enhancing existing ones. |
 
 
