@@ -189,40 +189,90 @@ Test the assistant with these 5 customer scenarios in the Playground:
     <title>NovaTech Support</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: #0078d4; color: white; padding: 20px; text-align: center; }
-        .header h1 { font-size: 1.5rem; }
-        .chat-box { height: 400px; overflow-y: auto; padding: 20px; }
-        .message { margin: 10px 0; padding: 12px 16px; border-radius: 12px; max-width: 80%; }
-        .user { background: #0078d4; color: white; margin-left: auto; text-align: right; }
-        .bot { background: #e9e9e9; }
-        .input-area { display: flex; padding: 20px; border-top: 1px solid #ddd; }
-        .input-area input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        .input-area button { margin-left: 10px; padding: 12px 24px; background: #0078d4; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
-        .input-area button:hover { background: #106ebe; }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { width: 100%; max-width: 700px; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .header { background: linear-gradient(135deg, #0078d4 0%, #00b4d8 100%); color: white; padding: 24px 28px; display: flex; align-items: center; gap: 14px; }
+        .header-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; backdrop-filter: blur(10px); }
+        .header-text h1 { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.3px; }
+        .header-text p { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+        .status-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; display: inline-block; margin-right: 6px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .chat-box { height: 420px; overflow-y: auto; padding: 24px; background: #fafafa; scroll-behavior: smooth; }
+        .chat-box::-webkit-scrollbar { width: 6px; }
+        .chat-box::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        .msg-row { display: flex; align-items: flex-end; gap: 10px; margin: 14px 0; animation: fadeIn 0.3s ease-out; }
+        .msg-row.user { flex-direction: row-reverse; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; font-weight: 600; }
+        .msg-row.bot .avatar { background: linear-gradient(135deg, #0078d4, #00b4d8); color: white; }
+        .msg-row.user .avatar { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .message { padding: 12px 16px; border-radius: 18px; max-width: 75%; line-height: 1.55; font-size: 0.95rem; word-wrap: break-word; }
+        .msg-row.user .message { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-bottom-right-radius: 4px; }
+        .msg-row.bot .message { background: white; color: #333; border: 1px solid #e8e8e8; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .typing-dots { display: flex; gap: 5px; padding: 14px 18px; }
+        .typing-dots span { width: 8px; height: 8px; background: #999; border-radius: 50%; animation: bounce 1.4s infinite; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+        .input-area { display: flex; padding: 18px 20px; border-top: 1px solid #eee; background: white; gap: 10px; }
+        .input-area input { flex: 1; padding: 14px 18px; border: 2px solid #e8e8e8; border-radius: 14px; font-size: 0.95rem; transition: border-color 0.2s; outline: none; }
+        .input-area input:focus { border-color: #0078d4; }
+        .input-area button { padding: 14px 28px; background: linear-gradient(135deg, #0078d4, #00b4d8); color: white; border: none; border-radius: 14px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: transform 0.15s, box-shadow 0.15s; }
+        .input-area button:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,120,212,0.4); }
+        .input-area button:active { transform: translateY(0); }
+        .input-area button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .suggestions { display: flex; gap: 8px; padding: 0 20px 14px; background: white; flex-wrap: wrap; }
+        .suggestion { padding: 8px 14px; background: #f0f4ff; border: 1px solid #d0d9f0; border-radius: 20px; font-size: 0.8rem; color: #4a5568; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+        .suggestion:hover { background: #e0e7ff; border-color: #0078d4; color: #0078d4; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header"><h1>NovaTech Customer Support</h1><p>Powered by Azure AI</p></div>
+        <div class="header">
+            <div class="header-icon">🤖</div>
+            <div class="header-text">
+                <h1>NovaTech Support</h1>
+                <p><span class="status-dot"></span>Online — ready to help</p>
+            </div>
+        </div>
         <div class="chat-box" id="chatBox">
-            <div class="message bot">Hello! I'm NovaTech's AI assistant. How can I help you today?</div>
+            <div class="msg-row bot">
+                <div class="avatar">NT</div>
+                <div class="message">Hello! I'm NovaTech's AI assistant. How can I help you today?</div>
+            </div>
         </div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter')sendMessage()">
-            <button onclick="sendMessage()">Send</button>
+            <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+        <div class="suggestions">
+            <div class="suggestion" onclick="useSuggestion(this)">How much does Pro Suite cost?</div>
+            <div class="suggestion" onclick="useSuggestion(this)">What apps do you integrate with?</div>
         </div>
     </div>
     <script>
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const chatBox = document.getElementById('chatBox');
+            const sendBtn = document.getElementById('sendBtn');
             const message = input.value.trim();
             if (!message) return;
 
-            chatBox.innerHTML += '<div class="message user">' + message + '</div>';
+            // User message
+            const userRow = document.createElement('div');
+            userRow.className = 'msg-row user';
+            userRow.innerHTML = '<div class="avatar">You</div><div class="message">' + escapeHtml(message) + '</div>';
+            chatBox.appendChild(userRow);
             input.value = '';
+            sendBtn.disabled = true;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Typing indicator
+            const typingRow = document.createElement('div');
+            typingRow.className = 'msg-row bot';
+            typingRow.innerHTML = '<div class="avatar">NT</div><div class="message"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+            chatBox.appendChild(typingRow);
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
@@ -232,11 +282,35 @@ Test the assistant with these 5 customer scenarios in the Playground:
                     body: JSON.stringify({ message: message })
                 });
                 const data = await response.json();
-                chatBox.innerHTML += '<div class="message bot">' + data.reply + '</div>';
+                typingRow.remove();
+
+                const botRow = document.createElement('div');
+                botRow.className = 'msg-row bot';
+                botRow.innerHTML = '<div class="avatar">NT</div><div class="message">' + escapeHtml(data.reply || data.error || 'No response.') + '</div>';
+                chatBox.appendChild(botRow);
             } catch (error) {
-                chatBox.innerHTML += '<div class="message bot">Sorry, I encountered an error. Please try again.</div>';
+                typingRow.remove();
+                const errRow = document.createElement('div');
+                errRow.className = 'msg-row bot';
+                errRow.innerHTML = '<div class="avatar">NT</div><div class="message">Sorry, something went wrong. Please try again.</div>';
+                chatBox.appendChild(errRow);
             }
+
+            sendBtn.disabled = false;
             chatBox.scrollTop = chatBox.scrollHeight;
+            input.focus();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function useSuggestion(el) {
+            document.getElementById('userInput').value = el.textContent;
+            document.querySelector('.suggestions').style.display = 'none';
+            sendMessage();
         }
     </script>
 </body>
@@ -269,11 +343,6 @@ Test the assistant with these 5 customer scenarios in the Playground:
 10. Run `npm install` in the SSH console
 11. Restart the App Service from the **Overview** page
 
-**Alternative — App Service Editor (even simpler):**
-1. Go to your App Service → **App Service Editor (Preview)** in the left menu
-2. This opens a browser-based VS Code editor
-3. Create the files directly and paste the code
-4. The app restarts automatically when you save
 
 **Acceptance Criteria:**
 - App Service is running and accessible via its URL (`https://app-novatech-{id}-support.azurewebsites.net`)
@@ -307,34 +376,92 @@ Test the assistant with these 5 customer scenarios in the Playground:
 ```javascript
 // server.js — add an /api/chat endpoint
 const express = require('express');
+const path = require('path');
+
 const app = express();
 app.use(express.json());
-app.use(express.static('public')); // serves index.html
+app.use(express.static(path.join(__dirname, 'public')));
 
+// NovaTech system prompt
+const SYSTEM_PROMPT = `You are NovaTech's AI Customer Support Assistant. You help customers with questions about NovaTech's products and services. Be friendly, professional, and concise.
+
+NovaTech Products:
+- NovaTech Pro Suite ($49/month): Project management, time tracking, invoicing
+- NovaTech Team Hub ($29/month): Team chat, file sharing, video calls
+- NovaTech Analytics ($79/month): Business intelligence, dashboards, reporting
+
+Common Questions:
+- Free trial: All products offer a 14-day free trial. No credit card required.
+- Cancellation: Cancel anytime from Account Settings > Subscription > Cancel.
+- Data export: Go to Settings > Data > Export. Formats: CSV, JSON, PDF.
+- Uptime SLA: 99.9% for all paid plans.
+- Support hours: Mon-Fri 9AM-6PM EST. Premium support: 24/7.
+- Integrations: Slack, Microsoft Teams, Google Workspace, Salesforce, Jira.
+- SSO: Available on Pro Suite and Analytics plans. SAML 2.0 and OpenID Connect.
+
+If you don't know the answer, say: "I don't have that information. Let me connect you with a human agent. Please describe your issue and our team will respond within 4 business hours."`;
+
+// Chat endpoint — calls Azure OpenAI
 app.post('/api/chat', async (req, res) => {
+    const { message } = req.body;
+
+    if (!message || typeof message !== 'string' || message.length > 2000) {
+        return res.status(400).json({ error: 'Message is required and must be under 2000 characters.' });
+    }
+
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
     const apiKey = process.env.AZURE_OPENAI_KEY;
-    const deployment = process.env.AZURE_OPENAI_DEPLOYMENT;
+    const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o-mini';
 
-    const response = await fetch(
-        `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`,
-        {
+    if (!endpoint || !apiKey) {
+        return res.status(500).json({ error: 'Azure OpenAI is not configured. Set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_KEY.' });
+    }
+
+    const url = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=2024-08-01-preview`;
+
+    try {
+        const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'api-key': apiKey },
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': apiKey
+            },
             body: JSON.stringify({
                 messages: [
-                    { role: 'system', content: 'You are NovaTech AI support assistant...' },
-                    { role: 'user', content: req.body.message }
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: message }
                 ],
-                max_tokens: 500, temperature: 0.3
+                max_tokens: 500,
+                temperature: 0.3
             })
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error(`Azure OpenAI error ${response.status}: ${errorBody}`);
+            return res.status(502).json({ error: 'Failed to get response from AI service.' });
         }
-    );
-    const data = await response.json();
-    res.json({ reply: data.choices[0].message.content });
+
+        const data = await response.json();
+        const reply = data.choices?.[0]?.message?.content || 'No response generated.';
+
+        res.json({ reply });
+    } catch (err) {
+        console.error('Error calling Azure OpenAI:', err.message);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
 });
 
-app.listen(process.env.PORT || 8080);
+// Health check
+app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`NovaTech Support running on port ${PORT}`);
+});
+
 ```
 
 **Acceptance Criteria:**
